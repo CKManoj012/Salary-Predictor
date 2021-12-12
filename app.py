@@ -7,17 +7,17 @@ import pandas as pd
 app = Flask(__name__)
 
 model = pickle.load(open("model.pkl","rb"))
-
+sc = pickle.load(open("standardScalar.pkl","rb"))
 
 @app.route("/")
 def home():
     return render_template('input.html')
    
-@app.route("/predict",methods=["POST"])
+@app.route("/predict",methods=["GET","POST"])
 def prediction():
     int_features = [float(x) for x in request.form.values()]   
     
-    sc = pickle.load(open("standardScalar.pkl","rb"))
+    
     trans_features = sc.transform([[float(x) for x in request.form.values()]])
 
     predictions = model.predict(trans_features)
